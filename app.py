@@ -6,7 +6,7 @@ from chat_list_view import chat_list_view
 from conversation_view import conversation_view
 from css_patch import apply_css_patch
 
-st.set_page_config(page_title="Botsapp Learning", layout="wide")
+st.set_page_config(page_title="BotsLearn", layout="wide")
 
 # User login
 login()
