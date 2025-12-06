@@ -13,7 +13,6 @@ def switch_to_conversation(chat_name: str):
 
     st.session_state.current_chat = chat_name
     st.session_state.view = "conversation"
-    st.rerun()
 
 
 def conversation_view():
