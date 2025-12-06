@@ -18,5 +18,11 @@ def chat_list_view():
         LABEL = f"{ICON} **{CHAT_NAME}**  \n{PREVIEW}"
         # Safe key for button
         SAFE_KEY = f"btn_{hashlib.md5(CHAT_NAME.encode()).hexdigest()}"
-        if st.button(LABEL, use_container_width=True, key=SAFE_KEY):
-            switch_to_conversation(CHAT_NAME)
+        # Use on_click callback to reliably set the current chat on click
+        st.button(
+            LABEL,
+            use_container_width=True,
+            key=SAFE_KEY,
+            on_click=switch_to_conversation,
+            args=(CHAT_NAME,),
+        )
