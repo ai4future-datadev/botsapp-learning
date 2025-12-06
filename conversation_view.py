@@ -11,6 +11,7 @@ def switch_to_conversation(chat_name: str):
 
 
 def conversation_view():
+    """Renders the conversation view."""
     st.header(f"Chat with {st.session_state.current_chat}")
     if st.button("⬅️ Back to chats", use_container_width=True):
         st.session_state.view = "chat_list"
@@ -23,16 +24,32 @@ def conversation_view():
         ):
             st.write(msg["content"])
 
-    def submit_message():
-        """Append user and assistant messages to chat history."""
-        txt = st.session_state["chat_input"]
+    # Read the input value returned by st.chat_input (no widget key / no value=)
+    # st.chat_input returns the submitted string only when the user submits.
+    txt = st.chat_input("Type a message…")
+    if txt:
         st.session_state.history[st.session_state.current_chat] += [
             {"role": "user", "content": txt, "avatar": "🙂"},
             {"role": "assistant", "content": f"Echo: {txt}", "avatar": "🤖"},
         ]
+        # No need to assign to widget-managed keys; the return-handling above is enough.
+        # Rerun is optional since writing to session_state triggers a rerun.
+        st.rerun()
 
-    st.chat_input(
-        "Type a message…",
-        key=f"chat_input_{st.session_state.current_chat}",
-        on_submit=submit_message,
-    )
+    # Example: present a multiple choice question
+    question = "Do you want to continue?"
+    options = ["Yes", "No", "Maybe"]
+
+    st.write(f"🤖 {question}")
+    cols = st.columns(len(options))
+    for idx, option in enumerate(options):
+        if cols[idx].button(option, key=f"option_{option}"):
+            # Append user's answer to chat history
+            st.session_state.history[st.session_state.current_chat].append(
+                {"role": "user", "content": option, "avatar": "🙂"}
+            )
+            # Optionally, append assistant's response
+            st.session_state.history[st.session_state.current_chat].append(
+                {"role": "assistant", "content": f"You chose: {option}", "avatar": "🤖"}
+            )
+            st.rerun()
